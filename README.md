@@ -1,32 +1,49 @@
-# DevOps Stage 1 — Automated Deployment Script
+# 🚀 Automated Deployment Bash Script — HNG Stage 1 DevOps Task
 
-This repository contains `deploy.sh` — a POSIX-compliant script that automates the setup and deployment of a Dockerized application to a remote Linux server.
+## 📘 Overview
 
-## What the script does
-1. Prompts for:
-   - Git repository HTTPS URL
-   - Personal Access Token (PAT)
-   - Branch (default: `main`)
-   - Remote SSH username
-   - Remote server IP/hostname
-   - SSH private key path
-   - Application internal port (container port)
-2. Clones or updates the repository locally (uses PAT for HTTPS repos).
-3. Validates presence of `Dockerfile` or `docker-compose.yml`.
-4. Rsyncs project files to the remote host.
-5. Remotely installs Docker, Docker Compose, and Nginx if missing (detects package manager).
-6. Builds / runs container(s) (supports `docker-compose` or single `Dockerfile`).
-7. Configures Nginx as a reverse proxy (port 80 -> container internal port).
-8. Validates Docker, container status, and performs basic HTTP checks.
-9. Writes logs to `deploy_YYYYMMDD_HHMMSS.log`.
-10. Supports `--cleanup` flag to remove containers, images and nginx config for the app.
+This project is part of the **HNG 13 DevOps Internship (Stage 1)**.  
+The goal is to build a **production-ready Bash script (`deploy.sh`)** that automates the setup, configuration, and deployment of a **Dockerized application** to a **remote Linux server**.
 
-## Usage
+The script performs all the necessary DevOps steps such as cloning a repository, installing dependencies, deploying containers, setting up Nginx, and validating the deployment — all without manual intervention.
 
-Make script executable:
+---
 
-```sh
-chmod +x deploy.sh
-./deploy.sh
-# or cleanup
-./deploy.sh --cleanup
+## 🎯 Objective
+
+- Automate deployment of a Dockerized application to a remote server.
+- Handle setup, configuration, and environment preparation end-to-end.
+- Implement robust error handling, validation, and logging.
+- Ensure idempotency — the script can be safely re-run without breaking anything.
+
+---
+
+## 🧠 Features
+
+✅ Interactive user input and validation  
+✅ Secure SSH connection to remote server  
+✅ Automatic environment setup (Docker, Nginx, Docker Compose)  
+✅ Application deployment and verification  
+✅ Nginx reverse proxy configuration  
+✅ Detailed logging and error handling  
+✅ Safe cleanup and idempotent operations  
+
+---
+
+## ⚙️ Script Workflow
+
+### **1. Collect User Input**
+Prompts for:
+- GitHub repository URL  
+- Personal Access Token (PAT)  
+- Branch name (default: `main`)  
+- SSH details (username, server IP, key path)  
+- Application port (internal container port)
+
+### **2. Clone or Update Repository**
+- Authenticates with PAT  
+- Clones the repository or updates it if already cloned  
+- Switches to the specified branch  
+- Checks for `Dockerfile` or `docker-compose.yml`
+
+###
