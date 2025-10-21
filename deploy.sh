@@ -254,4 +254,6 @@ CLEAN
   exit 0
 fi
 
-log "✅ My Deployment script finished successfully!"
+<<<<<<< HEAD
+log "✅ Deployment script finished successfully!"
+=======
