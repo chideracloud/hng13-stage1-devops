@@ -378,12 +378,15 @@ REMOTE_EOF
 # -------------------------
 # Transfer code to remote
 # -------------------------
-log "Syncing project to remote $REMOTE_USER@$REMOTE_HOST:$REMOTE_APP_DIR"
-# Use rsync for idempotent sync
-if ! rsync -az --delete --exclude '.git' -e "ssh $SSH_OPTS" "$LOCAL_CLONE_DIR"/ "$REMOTE_USER@$REMOTE_HOST:$REMOTE_APP_DIR" >>"$LOGFILE" 2>&1; then
-    die "rsync to remote failed" 50
-fi
-log "Files synced to remote"
+log "Syncing project to remote $REMOTE_USER@$REMOTE_HOST:$REMOTE_APP_DIR (using tar over SSH)"
+ssh $SSH_OPTS "$REMOTE_USER@$REMOTE_HOST" "mkdir -p '$REMOTE_APP_DIR' && sudo chown $REMOTE_USER:$REMOTE_USER '$REMOTE_APP_DIR'" >>"$LOGFILE" 2>&1 || die "Failed to prepare remote dir" 50
+
+(
+  cd "$LOCAL_CLONE_DIR" || die "Local clone dir missing" 50
+  tar --exclude='./.git' -czf - .
+) | ssh $SSH_OPTS "$REMOTE_USER@$REMOTE_HOST" "tar -xzf - -C '$REMOTE_APP_DIR'" >>"$LOGFILE" 2>&1 || die "tar/ssh sync to remote failed" 50
+
+log "Files synced to remote (via tar over SSH)"
 
 # -------------------------
 # Option: cleanup remote resources
